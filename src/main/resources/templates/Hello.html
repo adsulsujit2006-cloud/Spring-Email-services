@@ -1,87 +1,397 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>For My Friend</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@400;600&display=swap"
+          rel="stylesheet">
+
     <style>
-        :root{
-            --navy:#0e2236; --teal:#14b8a6; --sun:#ffc83d; --coral:#ff6b5b; --sky:#7dd3fc; --ink:#f4faff;
-            --display:'Baloo 2','Trebuchet MS',Arial,sans-serif; --sans:'Nunito',Arial,Helvetica,sans-serif;
+        /* ---------- Design tokens ---------- */
+        :root {
+            --navy: #0e2236;
+            --teal: #14b8a6;
+            --sun: #ffc83d;
+            --coral: #ff6b5b;
+            --sky: #7dd3fc;
+            --ink: #f4faff;
+            --soft: #cfe8f5;
+
+            --display: 'Baloo 2', 'Trebuchet MS', Arial, sans-serif;
+            --sans: 'Nunito', Arial, Helvetica, sans-serif;
         }
-        *{box-sizing:border-box;margin:0;padding:0}
-        html{scroll-behavior:smooth}
-        body{font-family:var(--sans);color:var(--ink);min-height:100vh;line-height:1.6;overflow-x:hidden;
-            background:radial-gradient(circle at 15% 8%,#14506a 0,transparent 42%),
-            radial-gradient(circle at 88% 85%,#0f6b66 0,transparent 40%),var(--navy)}
-        canvas{position:fixed;inset:0;pointer-events:none;z-index:20}
-        #sky{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
-        .star{position:absolute;bottom:-40px;opacity:.4;animation:rise linear forwards}
-        @keyframes rise{to{transform:translateY(-110vh) rotate(40deg);opacity:0}}
 
-        nav{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;
-            padding:14px 6%;background:rgba(14,34,54,.75);backdrop-filter:blur(10px)}
-        .logo{font-family:var(--display);font-size:23px;font-weight:800}
-        nav a{color:var(--ink);text-decoration:none;margin-left:22px;opacity:.8}
-        nav a:hover,nav a:focus-visible{opacity:1;color:var(--sun)}
+        /* ---------- Base ---------- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-        main{position:relative;z-index:1}
-        .hero{text-align:center;padding:90px 20px 50px}
-        .hello{font-size:18px;color:var(--sky)}
-        h1{font-family:var(--display);font-weight:800;font-size:clamp(42px,10vw,100px);line-height:1.05;margin:8px 0}
-        .names{display:inline-flex;gap:.3em;white-space:nowrap}
-        .nm{display:inline-block;transition:transform .7s cubic-bezier(.68,-.3,.27,1.3);color:var(--sun)}
-        #n2{cursor:pointer;color:var(--coral)}
-        #n2:hover{text-shadow:0 0 24px rgba(255,107,91,.6)}
-        .amp{font-size:28px;margin:4px 0;color:var(--teal);font-family:var(--display)}
-        .hint{font-size:14px;color:var(--sky);opacity:.8;min-height:22px}
-        .sub{max-width:540px;margin:14px auto 0;font-size:19px}
-        .btn{margin-top:30px;padding:14px 38px;border:0;border-radius:14px;background:var(--sun);color:#3a2a00;
-            font:800 17px var(--display);cursor:pointer;transition:transform .25s,background .25s;box-shadow:0 5px 0 #c99410}
-        .btn:hover{transform:translateY(-2px)}
-        .btn:active{transform:translateY(3px);box-shadow:0 2px 0 #c99410}
-        .btn:focus-visible,#n2:focus-visible{outline:3px solid var(--sky);outline-offset:4px}
+        html {
+            scroll-behavior: smooth;
+        }
 
-        section{max-width:900px;margin:0 auto;padding:56px 22px}
-        h2{font-family:var(--display);font-weight:800;font-size:clamp(28px,5vw,40px);text-align:center}
-        .lead{text-align:center;color:var(--sky);margin:4px 0 32px}
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: var(--sans);
+            line-height: 1.6;
+            color: var(--ink);
+            background:
+                    radial-gradient(circle at 15% 8%, #14506a 0, transparent 42%),
+                    radial-gradient(circle at 88% 85%, #0f6b66 0, transparent 40%),
+                    var(--navy);
+        }
 
-        .counter{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-        .cbox{min-width:110px;padding:18px 12px;border:2px solid var(--teal);border-radius:18px;text-align:center}
-        .cbox b{display:block;font-family:var(--display);font-size:42px;color:var(--sun);line-height:1.1}
+        main {
+            position: relative;
+            z-index: 1;
+        }
 
-        .timeline{position:relative;margin-left:14px;border-left:3px dashed var(--teal);padding-left:28px}
-        .event{position:relative;margin-bottom:30px}
-        .event::before{content:"★";position:absolute;left:-43px;top:-2px;color:var(--sun);background:var(--navy);padding:0 3px;font-size:20px}
-        .event h3{font-family:var(--display);font-size:22px}
-        .event small{color:var(--coral);font-weight:600}
-        .event p{color:#cfe8f5}
+        section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 56px 22px;
+        }
 
-        .reasons{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
-        .reason{padding:22px;background:rgba(255,255,255,.07);border-radius:20px;border-top:5px solid var(--teal)}
-        .reason:nth-child(3n+2){border-top-color:var(--sun)}
-        .reason:nth-child(3n){border-top-color:var(--coral)}
-        .reason span{font-size:30px}
-        .reason h3{font-family:var(--display);font-size:20px}
-        .reason p{color:#cfe8f5;font-size:15px}
+        h2 {
+            font-family: var(--display);
+            font-weight: 800;
+            font-size: clamp(28px, 5vw, 40px);
+            text-align: center;
+        }
 
-        .msg-wrap{text-align:center}
-        .msg{max-width:620px;margin:26px auto 0;border-radius:18px;text-align:left;background:#f4faff;color:#0e2236;
-            font-size:19px;line-height:1.8;max-height:0;opacity:0;overflow:hidden;padding:0 30px;transition:all .8s ease}
-        .msg.open{max-height:900px;opacity:1;padding:32px 30px}
-        .msg .sign{margin-top:16px;text-align:right;color:#0f766e;font-family:var(--display);font-size:22px}
+        .lead {
+            margin: 4px 0 32px;
+            text-align: center;
+            color: var(--sky);
+        }
 
-        footer{text-align:center;padding:36px 20px 50px;font-size:14px;color:var(--sky);opacity:.8}
+        /* ---------- Background layers ---------- */
+        #confetti {
+            position: fixed;
+            inset: 0;
+            z-index: 20;
+            pointer-events: none;
+        }
 
-        @media (max-width:600px){nav a{margin-left:12px;font-size:14px}.hero{padding-top:60px}}
-        @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+        #sky {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            bottom: -40px;
+            opacity: 0.4;
+            animation: rise linear forwards;
+        }
+
+        @keyframes rise {
+            to {
+                transform: translateY(-110vh) rotate(40deg);
+                opacity: 0;
+            }
+        }
+
+        /* ---------- Navbar ---------- */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px 22px;
+            padding: 14px 6%;
+            background: rgba(14, 34, 54, 0.75);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-family: var(--display);
+            font-size: 23px;
+            font-weight: 800;
+        }
+
+        nav a {
+            margin-left: 22px;
+            color: var(--ink);
+            text-decoration: none;
+            opacity: 0.8;
+        }
+
+        nav a:hover,
+        nav a:focus-visible {
+            color: var(--sun);
+            opacity: 1;
+        }
+
+        /* ---------- Hero ---------- */
+        .hero {
+            padding: 90px 20px 50px;
+            text-align: center;
+        }
+
+        .hello {
+            font-size: 18px;
+            color: var(--sky);
+        }
+
+        h1 {
+            margin: 8px 0;
+            font-family: var(--display);
+            font-weight: 800;
+            font-size: clamp(42px, 10vw, 100px);
+            line-height: 1.05;
+        }
+
+        .names {
+            display: inline-flex;
+            gap: 0.3em;
+            white-space: nowrap;
+        }
+
+        .nm {
+            display: inline-block;
+            color: var(--sun);
+            transition: transform 0.7s cubic-bezier(0.68, -0.3, 0.27, 1.3);
+        }
+
+        #n2 {
+            color: var(--coral);
+            cursor: pointer;
+        }
+
+        #n2:hover {
+            text-shadow: 0 0 24px rgba(255, 107, 91, 0.6);
+        }
+
+        .amp {
+            margin: 4px 0;
+            font-family: var(--display);
+            font-size: 28px;
+            color: var(--teal);
+        }
+
+        .hint {
+            min-height: 22px;
+            font-size: 14px;
+            color: var(--sky);
+            opacity: 0.8;
+        }
+
+        .sub {
+            max-width: 540px;
+            margin: 14px auto 0;
+            font-size: 19px;
+        }
+
+        /* ---------- Button ---------- */
+        .btn {
+            margin-top: 30px;
+            padding: 14px 38px;
+            border: 0;
+            border-radius: 14px;
+            font: 800 17px var(--display);
+            color: #3a2a00;
+            background: var(--sun);
+            box-shadow: 0 5px 0 #c99410;
+            cursor: pointer;
+            transition: transform 0.25s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #c99410;
+        }
+
+        .btn:focus-visible,
+        #n2:focus-visible {
+            outline: 3px solid var(--sky);
+            outline-offset: 4px;
+        }
+
+        /* ---------- Counter ---------- */
+        .counter {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 14px;
+        }
+
+        .cbox {
+            min-width: 110px;
+            padding: 18px 12px;
+            border: 2px solid var(--teal);
+            border-radius: 18px;
+            text-align: center;
+        }
+
+        .cbox b {
+            display: block;
+            font-family: var(--display);
+            font-size: 42px;
+            line-height: 1.1;
+            color: var(--sun);
+        }
+
+        /* ---------- Timeline ---------- */
+        .timeline {
+            margin-left: 14px;
+            padding-left: 28px;
+            border-left: 3px dashed var(--teal);
+        }
+
+        .event {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .event::before {
+            content: "★";
+            position: absolute;
+            top: -2px;
+            left: -43px;
+            padding: 0 3px;
+            font-size: 20px;
+            color: var(--sun);
+            background: var(--navy);
+        }
+
+        .event h3 {
+            font-family: var(--display);
+            font-size: 22px;
+        }
+
+        .event small {
+            font-weight: 600;
+            color: var(--coral);
+        }
+
+        .event p {
+            color: var(--soft);
+        }
+
+        /* ---------- Reason cards ---------- */
+        .reasons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+        }
+
+        .reason {
+            padding: 22px;
+            border-top: 5px solid var(--teal);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        .reason:nth-child(3n + 2) {
+            border-top-color: var(--sun);
+        }
+
+        .reason:nth-child(3n) {
+            border-top-color: var(--coral);
+        }
+
+        .reason span {
+            font-size: 30px;
+        }
+
+        .reason h3 {
+            font-family: var(--display);
+            font-size: 20px;
+        }
+
+        .reason p {
+            font-size: 15px;
+            color: var(--soft);
+        }
+
+        /* ---------- Message ---------- */
+        .msg-wrap {
+            text-align: center;
+        }
+
+        .msg {
+            max-width: 620px;
+            max-height: 0;
+            margin: 26px auto 0;
+            padding: 0 30px;
+            overflow: hidden;
+            border-radius: 18px;
+            font-size: 19px;
+            line-height: 1.8;
+            text-align: left;
+            color: var(--navy);
+            background: var(--ink);
+            opacity: 0;
+            transition: all 0.8s ease;
+        }
+
+        .msg.open {
+            max-height: 900px;
+            padding: 32px 30px;
+            opacity: 1;
+        }
+
+        .msg .sign {
+            margin-top: 16px;
+            font-family: var(--display);
+            font-size: 22px;
+            text-align: right;
+            color: #0f766e;
+        }
+
+        /* ---------- Footer ---------- */
+        footer {
+            padding: 36px 20px 50px;
+            font-size: 14px;
+            text-align: center;
+            color: var(--sky);
+            opacity: 0.8;
+        }
+
+        /* ---------- Responsive and accessibility ---------- */
+        @media (max-width: 600px) {
+            nav a {
+                margin-left: 0;
+                margin-right: 14px;
+                font-size: 14px;
+            }
+
+            .hero {
+                padding-top: 60px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
     </style>
 </head>
+
 <body>
-<div id="sky"></div>
-<canvas id="confetti"></canvas>
+<div id="sky" aria-hidden="true"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
 
 <nav>
     <div class="logo">🤝 Best Friends</div>
@@ -96,11 +406,23 @@
 <main>
     <div class="hero">
         <p class="hello">A little page for my friends</p>
-        <h1><span class="names"><span class="nm" id="n1">Krushna</span><span class="nm" id="n2" tabindex="0" role="button" aria-label="Swap the two names">Krishna</span></span></h1>
+
+        <h1>
+        <span class="names">
+          <span class="nm" id="n1">Krushna</span>
+          <span class="nm" id="n2" tabindex="0" role="button" aria-label="Swap the two names">Krishna</span>
+        </span>
+        </h1>
+
         <div class="amp">best friends forever</div>
-        <p class="hint" id="hint">Touch the second name 😄</p>
-        <p class="sub">Thank you for the laughs, the support and all the crazy memories. Life is way more fun with you around.</p>
-        <button class="btn" id="celebrate">Let's celebrate! 🎉</button>
+        <p class="hint" id="hint" aria-live="polite">Touch the second name 😄</p>
+
+        <p class="sub">
+            Thank you for the laughs, the support and all the crazy memories.
+            Life is way more fun with you around.
+        </p>
+
+        <button class="btn" id="celebrate" type="button">Let's celebrate! 🎉</button>
     </div>
 
     <section id="together">
@@ -129,8 +451,10 @@
     <section id="message" class="msg-wrap">
         <h2>A message for you</h2>
         <p class="lead">From one friend to another</p>
-        <button class="btn" id="openMsg">Read my message ✉️</button>
-        <div class="msg" id="msgBox" aria-live="polite">
+        <button class="btn" id="openMsg" type="button" aria-expanded="false" aria-controls="msgBox">
+            Read my message ✉️
+        </button>
+        <div class="msg" id="msgBox">
             <p id="msgText"></p>
             <p class="sign" id="msgSign"></p>
         </div>
@@ -140,130 +464,226 @@
 <footer>Made with 😄 for my friends · © 2026</footer>
 
 <script>
-    /* ====== EDIT THIS PART TO MAKE IT YOURS ====== */
-    var CONFIG = {
-        // The day your friendship started (year, month, day, hour, minute). Month is 1-12.
-        startDate: new Date(2020, 0, 1, 0, 0, 0),
+    /* ====================================================
+       EDIT THIS PART TO MAKE IT YOURS
+       ==================================================== */
+    const CONFIG = {
+        // Day your friendship started, written as YYYY-MM-DD
+        startDate: "2020-01-01",
 
         timeline: [
-            { date: "The day we met",    title: "Hello, new friend", text: "Nobody knew it then, but this was the start of something great." },
-            { date: "Our first trip",    title: "Adventure time",    text: "Wrong turns, endless jokes and memories we still talk about." },
-            { date: "The tough days",    title: "You were there",    text: "When things got hard, you were the first one to show up." },
-            { date: "Today",             title: "Still going strong", text: "More plans, more laughs, more stories ahead." }
+            { date: "The day we met",  title: "Hello, new friend",  text: "Nobody knew it then, but this was the start of something great." },
+            { date: "Our first trip",  title: "Adventure time",     text: "Wrong turns, endless jokes and memories we still talk about." },
+            { date: "The tough days",  title: "You were there",     text: "When things got hard, you were the first one to show up." },
+            { date: "Today",           title: "Still going strong", text: "More plans, more laughs, more stories ahead." }
         ],
 
         reasons: [
-            { icon: "😂", title: "You make me laugh",     text: "Even on my worst days, you find a way." },
-            { icon: "🤝", title: "You are loyal",         text: "I always know you have my back." },
-            { icon: "👂", title: "You listen",            text: "No judgement, just real talk and good advice." },
-            { icon: "🌟", title: "You inspire me",        text: "You push me to be a better version of myself." },
-            { icon: "🎮", title: "You are fun",           text: "Any plan is a good plan when you are in it." },
-            { icon: "🏠", title: "You feel like family",  text: "Some friends are the family you choose." }
+            { icon: "😂", title: "You make me laugh",    text: "Even on my worst days, you find a way." },
+            { icon: "🤝", title: "You are loyal",        text: "I always know you have my back." },
+            { icon: "👂", title: "You listen",           text: "No judgement, just real talk and good advice." },
+            { icon: "🌟", title: "You inspire me",       text: "You push me to be a better version of myself." },
+            { icon: "🎮", title: "You are fun",          text: "Any plan is a good plan when you are in it." },
+            { icon: "🏠", title: "You feel like family", text: "Some friends are the family you choose." }
         ],
 
-        message: "Hey friend, I wanted to say something I do not say often enough: thank you. Thank you for the support, the inside jokes and for being you. No matter how busy life gets or how far we are, you will always be my friend. Here is to more memories, more trips and more laughs together.",
+        message: "Hey friend, I wanted to say something I do not say often enough: thank you. " +
+            "Thank you for the support, the inside jokes and for being you. " +
+            "No matter how busy life gets or how far we are, you will always be my friend. " +
+            "Here is to more memories, more trips and more laughs together.",
+
         signature: "Your friend"
     };
-    /* ============================================= */
+    /* ==================================================== */
 
-    // Names swap when the mouse touches the second name
-    var n1 = document.getElementById("n1"), n2 = document.getElementById("n2"), hint = document.getElementById("hint");
-    var swapped = false;
-    var qName = new URLSearchParams(window.location.search).get("name");
-    if (qName) n1.textContent = qName;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const $ = (id) => document.getElementById(id);
+
+    /* ---------- Name swap ---------- */
+    const n1 = $("n1");
+    const n2 = $("n2");
+    const hint = $("hint");
+    let swapped = false;
+    let locked = false;
+
+    // Optional: Friend-Final.html?name=Someone replaces the first name
+    const queryName = new URLSearchParams(window.location.search).get("name");
+    if (queryName) n1.textContent = queryName;
+
+    function applySwap() {
+        const w1 = n1.offsetWidth;
+        const w2 = n2.offsetWidth;
+        const gap = n2.offsetLeft - (n1.offsetLeft + w1);
+
+        n1.style.transform = swapped ? `translateX(${w2 + gap}px)` : "none";
+        n2.style.transform = swapped ? `translateX(${-(w1 + gap)}px)` : "none";
+    }
 
     function swapNames() {
-        var w1 = n1.offsetWidth, w2 = n2.offsetWidth, gap = n2.offsetLeft - (n1.offsetLeft + w1);
+        if (locked) return;                 // ignore repeats while the names are moving
+        locked = true;
+        setTimeout(() => { locked = false; }, 750);
+
         swapped = !swapped;
-        n1.style.transform = swapped ? "translateX(" + (w2 + gap) + "px)" : "none";
-        n2.style.transform = swapped ? "translateX(" + (-(w1 + gap)) + "px)" : "none";
+        applySwap();
         hint.textContent = swapped ? "We switched places! 🔄" : "Touch the second name 😄";
         if (swapped) burst(60);
     }
-    n2.addEventListener("mouseenter", swapNames);
-    n2.addEventListener("touchstart", swapNames, { passive: true });
-    n2.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); swapNames(); } });
 
-    // Build timeline and reasons from CONFIG
-    function esc(s){ var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
-    document.getElementById("timeline").innerHTML = CONFIG.timeline.map(function (t) {
-        return '<div class="event"><small>' + esc(t.date) + '</small><h3>' + esc(t.title) + '</h3><p>' + esc(t.text) + '</p></div>';
-    }).join("");
-    document.getElementById("reasonList").innerHTML = CONFIG.reasons.map(function (r) {
-        return '<div class="reason"><span>' + r.icon + '</span><h3>' + esc(r.title) + '</h3><p>' + esc(r.text) + '</p></div>';
-    }).join("");
-    document.getElementById("msgText").textContent = CONFIG.message;
-    document.getElementById("msgSign").textContent = "— " + CONFIG.signature;
+    // pointerenter covers mouse and touch with one event, so touch does not swap twice
+    n2.addEventListener("pointerenter", swapNames);
+    n2.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            swapNames();
+        }
+    });
+    window.addEventListener("resize", () => { if (swapped) applySwap(); });
 
-    // Friendship counter
-    function tick() {
-        var diff = Math.max(0, Date.now() - CONFIG.startDate.getTime()), s = Math.floor(diff / 1000);
-        document.getElementById("cd").textContent = Math.floor(s / 86400);
-        document.getElementById("ch").textContent = Math.floor(s % 86400 / 3600);
-        document.getElementById("cm").textContent = Math.floor(s % 3600 / 60);
-        document.getElementById("cs").textContent = s % 60;
+    /* ---------- Build content from CONFIG ---------- */
+    function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
     }
-    tick(); setInterval(tick, 1000);
 
-    // Message
-    var msgBox = document.getElementById("msgBox"), openBtn = document.getElementById("openMsg");
-    openBtn.addEventListener("click", function () {
-        var open = msgBox.classList.toggle("open");
-        openBtn.textContent = open ? "Close message" : "Read my message ✉️";
-        if (open) burst(80);
+    $("timeline").innerHTML = CONFIG.timeline.map((t) =>
+        `<div class="event">
+         <small>${escapeHtml(t.date)}</small>
+         <h3>${escapeHtml(t.title)}</h3>
+         <p>${escapeHtml(t.text)}</p>
+       </div>`
+    ).join("");
+
+    $("reasonList").innerHTML = CONFIG.reasons.map((r) =>
+        `<div class="reason">
+         <span>${r.icon}</span>
+         <h3>${escapeHtml(r.title)}</h3>
+         <p>${escapeHtml(r.text)}</p>
+       </div>`
+    ).join("");
+
+    $("msgText").textContent = CONFIG.message;
+    $("msgSign").textContent = "— " + CONFIG.signature;
+
+    /* ---------- Friendship counter ---------- */
+    const startTime = new Date(CONFIG.startDate + "T00:00:00").getTime();
+
+    function updateCounter() {
+        const total = Math.max(0, Math.floor((Date.now() - startTime) / 1000));
+        $("cd").textContent = Math.floor(total / 86400);
+        $("ch").textContent = Math.floor((total % 86400) / 3600);
+        $("cm").textContent = Math.floor((total % 3600) / 60);
+        $("cs").textContent = total % 60;
+    }
+    updateCounter();
+    setInterval(updateCounter, 1000);
+
+    /* ---------- Message toggle ---------- */
+    const msgBox = $("msgBox");
+    const openBtn = $("openMsg");
+
+    openBtn.addEventListener("click", () => {
+        const isOpen = msgBox.classList.toggle("open");
+        openBtn.textContent = isOpen ? "Close message" : "Read my message ✉️";
+        openBtn.setAttribute("aria-expanded", String(isOpen));
+        if (isOpen) burst(80);
     });
 
-    // Floating background stars
-    var layer = document.getElementById("sky"), icons = ["⭐","✨","🌟","🎈"];
-    setInterval(function () {
-        var s = document.createElement("span");
-        s.className = "star";
-        s.textContent = icons[Math.floor(Math.random() * icons.length)];
-        s.style.left = Math.random() * 100 + "%";
-        s.style.fontSize = (14 + Math.random() * 24) + "px";
-        s.style.animationDuration = (8 + Math.random() * 8) + "s";
-        layer.appendChild(s);
-        setTimeout(function () { s.remove(); }, 16000);
-    }, 900);
+    /* ---------- Floating background stars ---------- */
+    if (!reduceMotion) {
+        const sky = $("sky");
+        const symbols = ["⭐", "✨", "🌟", "🎈"];
 
-    // Confetti (stars and squares)
-    var canvas = document.getElementById("confetti"), ctx = canvas.getContext("2d"), pieces = [];
-    var colors = ["#ffc83d", "#ff6b5b", "#14b8a6", "#7dd3fc", "#ffffff"];
-    function resize() { canvas.width = innerWidth; canvas.height = innerHeight; }
-    resize(); addEventListener("resize", resize);
+        setInterval(() => {
+            if (document.hidden) return;
+            const el = document.createElement("span");
+            el.className = "star";
+            el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            el.style.left = Math.random() * 100 + "%";
+            el.style.fontSize = 14 + Math.random() * 24 + "px";
+            el.style.animationDuration = 8 + Math.random() * 8 + "s";
+            sky.appendChild(el);
+            setTimeout(() => el.remove(), 16000);
+        }, 900);
+    }
 
-    function burst(n) {
-        for (var i = 0; i < (n || 140); i++) {
+    /* ---------- Confetti (stars and rectangles) ---------- */
+    const canvas = $("confetti");
+    const ctx = canvas.getContext("2d");
+    const colors = ["#ffc83d", "#ff6b5b", "#14b8a6", "#7dd3fc", "#ffffff"];
+    let pieces = [];
+    let running = false;
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    function burst(count = 140) {
+        if (reduceMotion) return;
+        for (let i = 0; i < count; i++) {
             pieces.push({
-                x: innerWidth / 2, y: innerHeight / 2,
-                vx: (Math.random() - .5) * 16, vy: Math.random() * -14 - 4,
-                size: Math.random() * 8 + 6, rot: Math.random() * 360, star: Math.random() > .5,
+                x: window.innerWidth / 2,
+                y: window.innerHeight / 2,
+                vx: (Math.random() - 0.5) * 16,
+                vy: Math.random() * -14 - 4,
+                size: Math.random() * 8 + 6,
+                rot: Math.random() * 360,
+                isStar: Math.random() > 0.5,
                 color: colors[Math.floor(Math.random() * colors.length)]
             });
         }
-    }
-    function drawStar(r) {
-        ctx.beginPath();
-        for (var i = 0; i < 10; i++) {
-            var rad = i % 2 ? r / 2.2 : r, a = i * Math.PI / 5 - Math.PI / 2;
-            ctx.lineTo(Math.cos(a) * rad, Math.sin(a) * rad);
+        if (!running) {
+            running = true;
+            requestAnimationFrame(drawFrame);
         }
-        ctx.closePath(); ctx.fill();
     }
-    function draw() {
+
+    function drawStar(radius) {
+        ctx.beginPath();
+        for (let i = 0; i < 10; i++) {
+            const r = i % 2 ? radius / 2.2 : radius;
+            const angle = (i * Math.PI) / 5 - Math.PI / 2;
+            ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
+        }
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    function drawFrame() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        pieces.forEach(function (p) {
-            p.x += p.vx; p.y += p.vy; p.vy += .3; p.rot += 6;
-            ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot * Math.PI / 180); ctx.fillStyle = p.color;
-            if (p.star) drawStar(p.size); else ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+
+        pieces.forEach((p) => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.3;
+            p.rot += 6;
+
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate((p.rot * Math.PI) / 180);
+            ctx.fillStyle = p.color;
+            if (p.isStar) drawStar(p.size);
+            else ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
             ctx.restore();
         });
-        pieces = pieces.filter(function (p) { return p.y < canvas.height + 30; });
-        requestAnimationFrame(draw);
+
+        pieces = pieces.filter((p) => p.y < canvas.height + 30);
+
+        if (pieces.length) {
+            requestAnimationFrame(drawFrame);
+        } else {
+            running = false;               // stop the loop when nothing is left to draw
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
     }
-    draw();
-    document.getElementById("celebrate").addEventListener("click", function () { burst(160); });
-    setTimeout(function () { burst(100); }, 600);
+
+    $("celebrate").addEventListener("click", () => burst(160));
+    setTimeout(() => burst(100), 600);   // confetti when the page opens
 </script>
 </body>
+
 </html>
